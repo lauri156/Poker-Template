@@ -580,4 +580,4 @@ if __name__ == "__main__":
     _web_ui._game = _game
     _state["players"] = [_player_dict(p) for p in _players]
     print("Open http://localhost:5000 in your browser")
-    app.run(debug=True, threaded=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=5000, debug=True, threaded=True, use_reloader=False)
