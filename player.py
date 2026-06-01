@@ -1,9 +1,5 @@
-"""Player model for the poker table."""
-
 from __future__ import annotations
-
 from dataclasses import dataclass, field
-
 from cards import Card
 
 
@@ -18,7 +14,6 @@ class Player:
 
     @property
     def hand(self) -> list[Card]:
-        """Alias for hole_cards (used by UI)."""
         return self.hole_cards
 
     def reset_for_hand(self) -> None:

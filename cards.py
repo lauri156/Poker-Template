@@ -20,7 +20,7 @@ class Suit(IntEnum):
             Suit.DIAMONDS: "D",
             Suit.HEARTS: "H",
             Suit.SPADES: "S",
-        }[self]
+    }[self]
 
 
 class Rank(IntEnum):

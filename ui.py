@@ -6,31 +6,53 @@ from cards import Card
 from player import Player
 
 
-class ConsoleUI: 
+class ConsoleUI:
+
     def show_table(self, community_cards: list[Card], pot: int) -> None:
-        # TODO: Task 1 - display the current state of the table, including the community cards and the pot size.
-        # If there are no community cards, indicate that the board is empty.
-        pass 
+        if community_cards:
+            board = self.format_cards(community_cards)
+        else:
+            board = "(empty)"
+
+        print("Board: " + board)
+        print("Pot: " + str(pot))
 
     def show_player(self, player: Player) -> None:
-        # TODO: Task 2 - display the player's name, hole cards, and chip count in a clear format.
-        pass
-    
+        print("Player: " + player.name)
+        print("Hand: " + self.format_cards(player.hand))
+        print("Chips: " + str(player.chips))
+
     def ask_action(self, player: Player, call_amount: int) -> str:
-        # TODO: Task 3 - prompt the player to choose an action (call/check, raise, or fold).
-        # TODO: Task 3 - match the player's input to the corresponding action, 
-        # and return a string indicating the chosen action.
-        pass 
+        while True:
+            action = input(
+                f"{player.name} – call/check ({call_amount}), raise, or fold? "
+            ).strip().lower()
+
+            if action in {'c', 'call', 'check'}:
+                return 'call'
+            elif action in {'r', 'raise'}:
+                return 'raise'
+            elif action in {'f', 'fold'}:
+                return 'fold'
+            else:
+                print("Invalid input. Please type call/check, raise, or fold.")
 
     def ask_raise_amount(self, minimum: int, maximum: int) -> int:
-        # TODO: Task 4 - prompt the player to enter a raise amount, 
-        # ensuring that it is a valid integer within the specified range.
-        pass
+        while True:
+            raw = input(f"Raise amount ({minimum}–{maximum}): ").strip()
+            try:
+                amount = int(raw)
+            except ValueError:
+                print("Please enter a valid number.")
+                continue
+
+            if minimum <= amount <= maximum:
+                return amount
+            else:
+                print(f"Amount must be between {minimum} and {maximum}.")
 
     def show_message(self, message: str) -> None:
-        # TODO: Task 5 - display a message to the player
-        pass
-    
+        print(message)
+
     def format_cards(self, cards: list[Card]) -> str:
-        # TODO: Task 6 - convert a list of Card objects into a string representation
-        pass
+        return " ".join(str(card) for card in cards)

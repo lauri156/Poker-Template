@@ -41,11 +41,11 @@ class HandEvaluator:
     def _rank_five(self, cards: list[Card]) -> HandRank:
         ranks = sorted([card.rank for card in cards], reverse=True)
         counts = Counter(ranks)
-        # Sort groups by (count desc, rank desc) so highest group comes first
+
         groups = sorted(counts.items(), key=lambda x: (x[1], x[0]), reverse=True)
         is_flush = len(set(card.suit for card in cards)) == 1
         straight_high = self._straight_high(ranks)
-
+    
         if is_flush and straight_high:
             return HandRank(HandCategory.STRAIGHT_FLUSH, (straight_high,))
         if groups[0][1] == 4:
@@ -75,12 +75,12 @@ class HandEvaluator:
 
     def _straight_high(self, ranks: list[int]) -> int | None:
         unique = sorted(set(ranks), reverse=True)
-        # Check regular straights (5 consecutive unique ranks)
+
         for i in range(len(unique) - 4):
             window = unique[i:i + 5]
             if window[0] - window[4] == 4:
                 return window[0]
-        # Check wheel: A-2-3-4-5 (ace plays as 1, returns 5-high)
+
         if {14, 2, 3, 4, 5}.issubset(set(unique)):
             return 5
         return None
