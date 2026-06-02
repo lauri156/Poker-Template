@@ -7,10 +7,11 @@ from evaluator import HandEvaluator
 from player import Player
 from table import Table
 from ui import ConsoleUI
+from typing import Any
 
 
 class TexasHoldemGame:
-    def __init__(self, players: list[Player], small_blind: int = 5, big_blind: int = 10) -> None:
+    def __init__(self, players: list[Player], small_blind: int = 5, big_blind: int = 10, ui: Any = None) -> None:
         if len(players) < 2:
             raise ValueError("need at least 2 players")
         self.players = players
@@ -18,7 +19,7 @@ class TexasHoldemGame:
         self.big_blind = big_blind
         self.table = Table()
         self.evaluator = HandEvaluator()
-        self.ui = ConsoleUI()
+        self.ui = ui if ui is not None else ConsoleUI()
 
     def play_hand(self) -> None:
         deck = Deck()
@@ -37,6 +38,8 @@ class TexasHoldemGame:
         self._deal_community(deck, 1, "River")
         self._betting_round("River")
         self._showdown()
+        if hasattr(self.ui, 'hand_over'):
+            self.ui.hand_over()
 
     def _post_blinds(self) -> None:
         small = self.players[0].bet(self.small_blind)

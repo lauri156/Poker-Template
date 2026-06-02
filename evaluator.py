@@ -7,7 +7,8 @@ from dataclasses import dataclass
 from enum import IntEnum
 from itertools import combinations
 
-from cards import Card
+from cards import Card, Deck, Rank, Suit
+from random import shuffle
 
 
 class HandCategory(IntEnum):
@@ -33,6 +34,31 @@ class HandRank:
 
 
 class HandEvaluator:
+    
+    def monteCarlo(self, hole_cards, community_cards, num_opponents, simulations=1000):
+        full_deck = [Card(rank, suit) for suit in Suit for rank in Rank]
+        wins = 0
+        for _ in range(simulations):
+            known = set(hole_cards + community_cards)
+            remaining = [c for c in full_deck if c not in known]
+            shuffle(remaining)
+
+            cards_needed = 5 - len(community_cards)
+            board = community_cards + remaining[:cards_needed]
+            remaining = remaining[cards_needed:]
+
+            my_rank = self.best_rank(hole_cards + board)
+            opponent_ranks = [
+                self.best_rank(remaining[i*2:(i+1)*2] + board)
+                for i in range(num_opponents)
+            ]
+
+            if my_rank >= max(opponent_ranks):
+                wins += 1
+
+        return wins / simulations
+
+    
     def best_rank(self, cards: list[Card]) -> HandRank:
         if len(cards) < 5:
             raise ValueError("need at least 5 cards")
@@ -45,7 +71,7 @@ class HandEvaluator:
         groups = sorted(counts.items(), key=lambda x: (x[1], x[0]), reverse=True)
         is_flush = len(set(card.suit for card in cards)) == 1
         straight_high = self._straight_high(ranks)
-    
+
         if is_flush and straight_high:
             return HandRank(HandCategory.STRAIGHT_FLUSH, (straight_high,))
         if groups[0][1] == 4:
