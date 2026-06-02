@@ -1,5 +1,3 @@
-"""Five-card hand evaluator used to rank Texas Hold'em showdowns."""
-
 from __future__ import annotations
 
 from collections import Counter
@@ -9,7 +7,6 @@ from itertools import combinations
 
 from cards import Card, Deck, Rank, Suit
 from random import shuffle
-
 
 class HandCategory(IntEnum):
     HIGH_CARD = 0
@@ -22,7 +19,6 @@ class HandCategory(IntEnum):
     FOUR_OF_A_KIND = 7
     STRAIGHT_FLUSH = 8
 
-
 @dataclass(frozen=True, order=True)
 class HandRank:
     category: HandCategory
@@ -31,7 +27,6 @@ class HandRank:
     @property
     def label(self) -> str:
         return self.category.name.replace("_", " ").title()
-
 
 class HandEvaluator:
     

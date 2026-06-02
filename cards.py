@@ -1,11 +1,8 @@
-"""Card and deck primitives for Texas Hold'em."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
 from random import shuffle
-
 
 class Suit(IntEnum):
     CLUBS = 0
@@ -21,7 +18,6 @@ class Suit(IntEnum):
             Suit.HEARTS: "H",
             Suit.SPADES: "S",
     }[self]
-
 
 class Rank(IntEnum):
     TWO = 2
@@ -56,7 +52,6 @@ class Rank(IntEnum):
             Rank.ACE: "A",
         }[self]
 
-
 @dataclass(frozen=True)
 class Card:
     rank: Rank
@@ -64,7 +59,6 @@ class Card:
 
     def __str__(self) -> str:
         return self.rank.label + self.suit.symbol
-
 
 class Deck:
     def __init__(self) -> None:

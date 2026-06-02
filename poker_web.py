@@ -1,4 +1,3 @@
-"""Texas Hold'em — Flask browser UI"""
 from __future__ import annotations
 
 import queue
@@ -11,7 +10,6 @@ from player import Player
 from table import Table
 from evaluator import HandEvaluator, HandCategory, HandRank
 from game import TexasHoldemGame
-
 
 _state: dict = {
     "phase": "idle",
@@ -28,12 +26,9 @@ _state: dict = {
 _action_q: queue.Queue = queue.Queue()
 _raise_q:  queue.Queue = queue.Queue()
 
-
 class WebUI:
     def __init__(self, game):
         self._game = game
-
-    # ── ConsoleUI-compatible interface (called by game.py) ────────────────────
 
     def show_message(self, msg: str) -> None:
         _state["log"].append(msg)
@@ -44,7 +39,7 @@ class WebUI:
             _state["community_cards"] = [str(c) for c in community_cards]
             _state["pot"] = pot
             _state["players"] = [_player_dict(p) for p in self._game.players]
-            # compute win prob for the current street
+
             num_cards = len(community_cards)
             street = {0: "Pre-Flop", 3: "Flop", 4: "Turn", 5: "River"}.get(num_cards)
             if street:
@@ -64,8 +59,6 @@ class WebUI:
 
     def format_cards(self, cards) -> str:
         return " ".join(str(c) for c in cards)
-
-    # ── Web-only helpers ──────────────────────────────────────────────────────
 
     def refresh(self, game) -> None:
         reveal = _state["phase"] == "hand_over"
@@ -95,7 +88,6 @@ class WebUI:
             )
         _state["win_prob"].append({"street": street, "prob": round(prob * 100, 1)})
 
-
 def _player_dict(p: Player, reveal=False):
     show_cards = p.is_human or reveal
     return {
@@ -107,31 +99,26 @@ def _player_dict(p: Player, reveal=False):
                       (["??" for _ in p.hole_cards] if p.hole_cards else []),
     }
 
-
 app = Flask(__name__)
 _players = [
     Player("You",       chips=1000, is_human=True),
-    Player("Ada Bot",   chips=1000),
-    Player("Grace Bot", chips=1000),
+    Player("Bot 1",   chips=1000),
+    Player("Bot 2", chips=1000),
 ]
 _game   = None
 _web_ui = None
-
 
 @app.route("/")
 def index():
     return Response(HTML, mimetype="text/html")
 
-
 @app.route("/state")
 def state():
     return jsonify(_state)
 
-
 @app.route("/winprob")
 def winprob():
     return jsonify(_state["win_prob"])
-
 
 @app.route("/deal", methods=["POST"])
 def deal():
@@ -150,7 +137,6 @@ def deal():
     threading.Thread(target=_game.play_hand, daemon=True).start()
     return jsonify({"ok": True})
 
-
 @app.route("/action", methods=["POST"])
 def action():
     data = request.json or {}
@@ -161,7 +147,6 @@ def action():
     elif act in ("fold", "call"):
         _action_q.put(act)
     return jsonify({"ok": True})
-
 
 HTML = r"""<!doctype html>
 <html lang="en">
@@ -374,7 +359,6 @@ poll();
 </script>
 </body>
 </html>"""
-
 
 if __name__ == "__main__":
     _web_ui = WebUI(None)

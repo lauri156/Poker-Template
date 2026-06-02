@@ -1,5 +1,3 @@
-"""Main Texas Hold'em game loop."""
-
 from __future__ import annotations
 
 from cards import Deck
@@ -8,7 +6,6 @@ from player import Player
 from table import Table
 from ui import ConsoleUI
 from typing import Any
-
 
 class TexasHoldemGame:
     def __init__(self, players: list[Player], small_blind: int = 5, big_blind: int = 10, ui: Any = None) -> None:
@@ -66,7 +63,7 @@ class TexasHoldemGame:
     def _betting_round(self, street: str) -> None:
         if self._only_one_player_left():
             return
-        # Track the highest bet this round
+
         current_bet = max(p.current_bet for p in self.players)
         for player in self.players:
             if player.folded:
@@ -99,7 +96,6 @@ class TexasHoldemGame:
             if self._only_one_player_left():
                 break
 
-        # Reset current bets at end of round
         for player in self.players:
             player.current_bet = 0
 

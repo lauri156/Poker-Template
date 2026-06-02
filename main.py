@@ -1,8 +1,5 @@
-"""Run the CLI Texas Hold'em starter game."""
-
 from game import TexasHoldemGame
 from player import Player
-
 
 def main() -> None:
     players = [
@@ -13,7 +10,5 @@ def main() -> None:
     game = TexasHoldemGame(players)
     game.play_hand()
 
-
 if __name__ == "__main__":
     main()
-

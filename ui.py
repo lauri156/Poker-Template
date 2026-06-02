@@ -1,10 +1,7 @@
-"""Console input/output helpers."""
-
 from __future__ import annotations
 
 from cards import Card
 from player import Player
-
 
 class ConsoleUI:
 

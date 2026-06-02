@@ -1,11 +1,8 @@
-"""Shared table state for a Hold'em hand."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
 from cards import Card
-
 
 @dataclass
 class Table:
