@@ -108,6 +108,7 @@ _players = [
 _game   = None
 _web_ui = None
 
+#backend routes also built with knowledge from AI
 @app.route("/")
 def index():
     return Response(HTML, mimetype="text/html")
@@ -148,6 +149,8 @@ def action():
         _action_q.put(act)
     return jsonify({"ok": True})
 
+
+#HTML largely implmented using vibecoding
 HTML = r"""<!doctype html>
 <html lang="en">
 <head>
